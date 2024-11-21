@@ -1,101 +1,122 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import RegisterForm from '../components/RegisterForm';
+
+type Registrant = {
+  name: string;
+  email: string;
+  comments: string;
+  checkInNumber: number;
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="./next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [registrants, setRegistrants] = useState<Registrant[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="./vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="./file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="./window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="./globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  // Fetch the registrants from localStorage when the component mounts
+  useEffect(() => {
+    const savedRegistrants = JSON.parse(localStorage.getItem('registrants') || '[]');
+    setRegistrants(savedRegistrants);
+  }, []);
+
+  // Function to handle form submission
+  const handleFormSubmit = (newRegistrant: Registrant) => {
+    // Save to localStorage
+    const updatedRegistrants = [...registrants, newRegistrant];
+    localStorage.setItem('registrants', JSON.stringify(updatedRegistrants));
+
+    // Update the state
+    setRegistrants(updatedRegistrants);
+  };
+
+  return (
+      <div className="min-h-screen bg-background flex flex-col items-center">
+        {/* Hero Section */}
+        <header className="w-full bg-blue-600 text-foreground py-8 px-4">
+          <div className="max-w-7xl mx-auto text-center">
+            <h1 className="text-4xl font-bold">Annual Tech Conference 2024</h1>
+            <p className="mt-4 text-lg">
+              Join us for an unforgettable day of learning, networking, and innovation!
+            </p>
+            <a
+                href="#register"
+                className="inline-block mt-6 px-8 py-3 bg-gray-500 text-white rounded shadow-md font-semibold hover:bg-gray-200 hover:text-blue-600"
+            >
+              Register
+            </a>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 space-y-16">
+          {/* Conference Details */}
+          <section id="details" className="text-center">
+            <h2 className="text-3xl font-semibold text-foreground">Conference Details</h2>
+            <p className="mt-4 text-foreground">
+              The Annual Tech Conference 2024 brings together industry leaders, developers,
+              and enthusiasts to discuss the latest in technology and innovation.
+            </p>
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="p-4 border rounded shadow-sm bg-foreground">
+                <h3 className="font-bold text-xl text-blue-600">When</h3>
+                <p className="text-background">March 15, 2024</p>
+              </div>
+              <div className="p-4 border rounded shadow-sm bg-foreground">
+                <h3 className="font-bold text-xl text-blue-600">Where</h3>
+                <p className="text-background">San Francisco, CA</p>
+              </div>
+              <div className="p-4 border rounded shadow-sm bg-foreground">
+                <h3 className="font-bold text-xl text-blue-600">Who</h3>
+                <p className="text-background">Tech enthusiasts of all levels</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Registration Form */}
+          <section id="register" className="text-center">
+            <h2 className="text-3xl font-semibold text-foreground">Register Now</h2>
+            <RegisterForm onFormSubmit={handleFormSubmit} />
+          </section>
+
+          {/* Registered People List */}
+          <section id="registrants" className="text-center mt-8">
+            <h2 className="text-3xl font-semibold text-foreground">Registered Attendees</h2>
+            <ul className="mt-4">
+              {registrants.length === 0 ? (
+                  <p>No one has registered yet.</p>
+              ) : (
+                  registrants.map((registrant, index) => (
+                      <li key={index} className="p-4 border rounded shadow-sm bg-foreground">
+                        <p className="font-bold text-blue-600">{registrant.name}</p>
+                        <p className="text-background">{registrant.email}</p>
+                        {registrant.comments && <p className="text-background italic">{registrant.comments}</p>}
+                        <p className="text-background">Check-in Number: {registrant.checkInNumber}</p>
+                      </li>
+                  ))
+              )}
+            </ul>
+          </section>
+
+          {/* Contact Information */}
+          <section id="contact" className="text-center">
+            <h2 className="text-3xl font-semibold text-foreground">Contact Us</h2>
+            <p className="mt-4 text-foreground">
+              Have questions? Reach out to us at{' '}
+              <a
+                  href="mailto:info@techconference2024.com"
+                  className="text-blue-600 underline"
+              >
+                info@techconference2024.com
+              </a>
+              .
+            </p>
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="w-full bg-gray-800 text-foreground py-4 text-center">
+          <p>&copy; 2024 Tech Conference. All rights reserved.</p>
+        </footer>
+      </div>
   );
 }
